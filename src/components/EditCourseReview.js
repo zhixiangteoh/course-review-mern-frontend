@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from "axios";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default class EditCourseReview extends Component {
@@ -73,19 +72,6 @@ export default class EditCourseReview extends Component {
       .catch(function (error) {
         console.log(error);
       });
-
-    axios
-      .get("http://localhost:5000/users/")
-      .then((response) => {
-        if (response.data.length > 0) {
-          this.setState({
-            users: response.data.map((user) => user.username),
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   onSubmit(e) {
@@ -99,9 +85,11 @@ export default class EditCourseReview extends Component {
       semester: this.state.semester + " " + this.state.year,
       professor: this.state.professor,
       author: this.state.author,
-      rating: (this.state.workloadrating + this.state.examsrating) / 2,
-      workloadrating: this.state.workloadrating,
-      examsrating: this.state.examsrating,
+      rating:
+        (Number(this.state.workloadrating) + Number(this.state.examsrating)) /
+        2,
+      workloadrating: Number(this.state.workloadrating),
+      examsrating: Number(this.state.examsrating),
       general: this.state.general,
       tldr: this.state.tldr,
       syllabus: this.state.syllabus,
@@ -123,7 +111,7 @@ export default class EditCourseReview extends Component {
       )
       .then((res) => console.log(res.data));
 
-    window.location = "/";
+    this.props.history.push("/");
   }
 
   renderYears() {
@@ -281,7 +269,7 @@ export default class EditCourseReview extends Component {
             />
           </div>
           <div className="form-group">
-            <label>Main Textbook: </label>
+            <label>Main Textbook or Teaching Material: </label>
             <input
               type="text"
               className="form-control"

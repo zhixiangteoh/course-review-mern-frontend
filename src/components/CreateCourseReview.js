@@ -3,6 +3,11 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const DEFAULT_UNI = "National University of Singapore";
+const DEFAULT_SUBJECT = "Computer Science";
+const DEFAULT_SEM = "Fall";
+const DEFAULT_YEAR = Number(new Date().getFullYear());
+
 export default class CreateCourseReview extends Component {
   constructor(props) {
     super(props);
@@ -10,12 +15,12 @@ export default class CreateCourseReview extends Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      university: "",
-      subject: "",
+      university: DEFAULT_UNI,
+      subject: DEFAULT_SUBJECT,
       code: "",
       name: "",
-      semester: "",
-      year: 0,
+      semester: DEFAULT_SEM,
+      year: DEFAULT_YEAR,
       professor: "",
       rating: 0,
       author: "",
@@ -41,16 +46,15 @@ export default class CreateCourseReview extends Component {
   }
 
   componentDidMount() {
+    const token = this.props.token;
+
     axios
-      .get("http://localhost:5000/users/")
+      .get("http://localhost:5000/auth/user", {
+        headers: { "x-auth-token": token },
+      })
       .then((response) => {
-        if (response.data.length > 0) {
-          // at least one user in database
-          this.setState({
-            users: response.data.map((user) => user.username), // set users array to list of users
-            username: response.data[0].username,
-          });
-        }
+        console.log(response);
+        this.setState({ author: response.data.name });
       })
       .catch((error) => {
         console.log(error);
@@ -60,17 +64,19 @@ export default class CreateCourseReview extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const course = {
+    const coursereview = {
       university: this.state.university,
       subject: this.state.subject,
       code: this.state.code,
       name: this.state.name,
       semester: this.state.semester + " " + this.state.year,
       professor: this.state.professor,
-      rating: (this.state.workloadrating + this.state.examsrating) / 2,
       author: this.state.author,
-      workloadrating: this.state.workloadrating,
-      examsrating: this.state.examsrating,
+      rating:
+        (Number(this.state.workloadrating) + Number(this.state.examsrating)) /
+        2,
+      workloadrating: Number(this.state.workloadrating),
+      examsrating: Number(this.state.examsrating),
       general: this.state.general,
       tldr: this.state.tldr,
       syllabus: this.state.syllabus,
@@ -82,13 +88,13 @@ export default class CreateCourseReview extends Component {
       exams: this.state.exams,
     };
 
-    console.log(course);
+    console.log(coursereview);
 
     axios
-      .post("http://localhost:5000/courses/add", course)
+      .post("http://localhost:5000/coursereviews/add", coursereview)
       .then((res) => console.log(res.data));
 
-    window.location = "/";
+    this.props.history.push("/");
   }
 
   renderYears() {
@@ -242,7 +248,7 @@ export default class CreateCourseReview extends Component {
             />
           </div>
           <div className="form-group">
-            <label>Main Textbook: </label>
+            <label>Main Textbook or Teaching Material: </label>
             <input
               type="text"
               className="form-control"

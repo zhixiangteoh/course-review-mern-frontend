@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 
 export default class Course extends Component {
   constructor(props) {
@@ -16,6 +18,8 @@ export default class Course extends Component {
       author: "",
       workloadrating: 0,
       examsrating: 0,
+      general: "",
+      tldr: "",
       syllabus: "",
       textbook: "",
       grading: "",
@@ -27,46 +31,82 @@ export default class Course extends Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    const {
-      university,
-      subject,
-      code,
-      name,
-      semester,
-      professor,
-      author,
-      rating,
-      workloadrating,
-      examsrating,
-      syllabus,
-      textbook,
-      grading,
-      workload,
-      lectures,
-      assignments,
-      exams,
-    } = this.props.location.state;
+    if (this.props.location.state) {
+      const {
+        university,
+        subject,
+        code,
+        name,
+        semester,
+        professor,
+        rating,
+        author,
+        workloadrating,
+        examsrating,
+        general,
+        tldr,
+        syllabus,
+        textbook,
+        grading,
+        workload,
+        lectures,
+        assignments,
+        exams,
+      } = this.props.location.state;
 
-    this.setState({
-      university,
-      subject,
-      code,
-      name,
-      semester,
-      professor,
-      author,
-      rating,
-      workloadrating,
-      examsrating,
-      syllabus,
-      textbook,
-      grading,
-      workload,
-      lectures,
-      assignments,
-      exams,
-    });
+      this.setState({
+        university,
+        subject,
+        code,
+        name,
+        semester,
+        professor,
+        rating,
+        author,
+        workloadrating,
+        examsrating,
+        general,
+        tldr,
+        syllabus,
+        textbook,
+        grading,
+        workload,
+        lectures,
+        assignments,
+        exams,
+      });
+
+      return;
+    }
+
+    axios
+      .get("http://localhost:5000/coursereviews/" + this.props.match.params.id)
+      .then((response) => {
+        this.setState({
+          university: response.data.university,
+          subject: response.data.subject,
+          code: response.data.code,
+          name: response.data.name,
+          semester: response.data.semester,
+          professor: response.data.professor,
+          rating: response.data.rating,
+          author: response.data.author,
+          workloadrating: response.data.workloadrating,
+          examsrating: response.data.examsrating,
+          general: response.data.general,
+          tldr: response.data.tldr,
+          syllabus: response.data.syllabus,
+          textbook: response.data.textbook,
+          grading: response.data.grading,
+          workload: response.data.workload,
+          lectures: response.data.lectures,
+          assignments: response.data.assignments,
+          exams: response.data.exams,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     axios
       .get("http://localhost:5000/users/")
@@ -83,44 +123,38 @@ export default class Course extends Component {
   }
 
   render() {
+    // header
+    const header = `# ${this.state.code} ${this.state.name}\n\nAuthor: **${this.state.author}**`;
+    // context
+    const context = `\n## Context\n\nUniversity: **${this.state.university}**\n\nSubject: **${this.state.subject}**\n\nSemester Taken: **${this.state.semester}**\n\nProfessor or Lecturer: **${this.state.professor}**`;
+    // general comments
+    const generalcomments = `\n## General Comments\n\nOverall Rating: **${this.state.rating}**\n\n${this.state.general}`;
+    // tldr
+    const tldr = `\n## TL;DR\n\n${this.state.tldr}`;
+    // syllabus
+    const syllabus = `\n## Syllabus\n\n${this.state.syllabus}\n\n### Main Textbook\n\n${this.state.textbook}`;
+    // grading
+    const grading = `\n## Grading\n\n${this.state.grading}`;
+    // workload
+    const workload = `\n## Workload\n\nRating: **${this.state.workloadrating}**\n\n${this.state.workload}\n\n### Lectures\n\n${this.state.lectures}\n\n### Assignments\n\n${this.state.assignments}`;
+    // exams
+    const exams = `\n## Exams\n\nRating: **${this.state.examsrating}**\n\n${this.state.exams}`;
+
     return (
       <div>
-        <h1>Course Review</h1>
-        <p>Author: {this.state.author}</p>
-
-        <h2>Basic Information</h2>
-        <p>University: {this.state.university}</p>
-        <p>Subject: {this.state.subject}</p>
-        <p>Course Code: {this.state.code}</p>
-        <p>Course Name: {this.state.name}</p>
-        <p>Semester Taken: {this.state.semester}</p>
-        <p>Professor or Lecturer: {this.state.professor}</p>
-        <p>Overall Rating: {this.state.rating}</p>
-
-        <h2>Course Details</h2>
-
-        <h3>Syllabus</h3>
-        <h4>General Comments</h4>
-        <p>{this.state.syllabus}</p>
-        <p>Main Textbook: {this.state.textbook}</p>
-
-        <h3>Grading</h3>
-        <h4>General Comments</h4>
-        <p>{this.state.grading}</p>
-
-        <h3>Workload</h3>
-        <h4>General Comments</h4>
-        <p>{this.state.grading}</p>
-        <p>Rating: {this.state.workloadrating}</p>
-
-        <h4></h4>
-        <p>Lectures: {this.state.lectures}</p>
-        <p>Assignments: {this.state.assignments}</p>
-
-        <h3>Exams</h3>
-        <h4>General Comments</h4>
-        <p>{this.state.exams}</p>
-        <p>Rating: {this.state.examsrating}</p>
+        <ReactMarkdown
+          plugins={[gfm]}
+          source={
+            header +
+            context +
+            generalcomments +
+            tldr +
+            syllabus +
+            grading +
+            workload +
+            exams
+          }
+        ></ReactMarkdown>
       </div>
     );
   }

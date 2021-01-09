@@ -5,12 +5,14 @@ import axios from "axios";
 // functional component
 const Course = ({ course, deleteCourse }) => (
   <tr>
-    <td>
-      <Link to={{ pathname: "/" + course._id }}>{course.university}</Link>
-    </td>
+    <td>{course.university}</td>
     <td>{course.subject}</td>
     <td>{course.code}</td>
-    <td>{course.name}</td>
+    <td>
+      <Link to={{ pathname: "/" + course._id, state: course }}>
+        {course.name}
+      </Link>
+    </td>
     <td>{course.semester}</td>
     <td>{course.professor}</td>
     <td>{course.rating}</td>
