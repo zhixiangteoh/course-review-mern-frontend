@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 
 // functional component
 const Course = ({ course, deleteCourse }) => (
@@ -14,11 +16,14 @@ const Course = ({ course, deleteCourse }) => (
       </Link>
     </td>
     <td>{course.semester}</td>
-    <td>{course.professor}</td>
+    <td>
+      <ReactMarkdown plugins={[gfm]} source={`${course.professor}`} />
+    </td>
     <td>{course.rating}</td>
     <td>{course.author}</td>
     <td>
-      <Link to={"/edit/" + course._id}>edit</Link> |{" "}
+      <Link to={{ pathname: "/edit/" + course._id, state: course }}>edit</Link>{" "}
+      |{" "}
       <a
         href="#"
         onClick={() => {

@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { Form, Field } from "react-final-form";
 
-const DEFAULT_UNI = "National University of Singapore";
-const DEFAULT_SUBJECT = "Computer Science";
-const DEFAULT_SEM = "Fall";
-const DEFAULT_YEAR = Number(new Date().getFullYear());
+import FormStyles from "./FormStyles";
 
 export default class CreateCourseReview extends Component {
   constructor(props) {
@@ -15,26 +11,8 @@ export default class CreateCourseReview extends Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      university: DEFAULT_UNI,
-      subject: DEFAULT_SUBJECT,
-      code: "",
-      name: "",
-      semester: DEFAULT_SEM,
-      year: DEFAULT_YEAR,
-      professor: "",
-      rating: 0,
       author: "",
-      workloadrating: 0,
-      examsrating: 0,
-      general: "",
-      tldr: "",
-      syllabus: "",
-      textbook: "",
-      grading: "",
-      workload: "",
-      lectures: "",
-      assignments: "",
-      exams: "",
+
       universities: [
         "National University of Singapore",
         "University of Pittsburgh, Pittsburgh",
@@ -61,32 +39,12 @@ export default class CreateCourseReview extends Component {
       });
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-
-    const coursereview = {
-      university: this.state.university,
-      subject: this.state.subject,
-      code: this.state.code,
-      name: this.state.name,
-      semester: this.state.semester + " " + this.state.year,
-      professor: this.state.professor,
-      author: this.state.author,
-      rating:
-        (Number(this.state.workloadrating) + Number(this.state.examsrating)) /
-        2,
-      workloadrating: Number(this.state.workloadrating),
-      examsrating: Number(this.state.examsrating),
-      general: this.state.general,
-      tldr: this.state.tldr,
-      syllabus: this.state.syllabus,
-      textbook: this.state.textbook,
-      grading: this.state.grading,
-      workload: this.state.workload,
-      lectures: this.state.lectures,
-      assignments: this.state.assignments,
-      exams: this.state.exams,
-    };
+  onSubmit(coursereview) {
+    coursereview.semester += ` ${coursereview.year}`;
+    coursereview.author = this.state.author;
+    coursereview.rating =
+      (Number(coursereview.workloadrating) + Number(coursereview.examsrating)) /
+      2;
 
     console.log(coursereview);
 
@@ -101,7 +59,7 @@ export default class CreateCourseReview extends Component {
     let years = [];
     const min = 1960;
     const max = new Date().getFullYear();
-    for (let i = min; i <= max; i++) {
+    for (let i = max; i >= min; i--) {
       years.push(i);
     }
 
@@ -111,239 +69,257 @@ export default class CreateCourseReview extends Component {
   }
 
   render() {
+    // validators
+    const required = (value) => (value ? undefined : "Required");
+    const mustBeNumber = (value) =>
+      isNaN(value) ? "Must be a number" : undefined;
+    const composeValidators = (...validators) => (value) =>
+      validators.reduce(
+        (error, validator) => error || validator(value),
+        undefined
+      );
+
     return (
       <div>
         <h3>Create New Course Review</h3>
-        <form onSubmit={this.onSubmit}>
-          <h4>Basic Information</h4>
-          <div className="form-group">
-            <label>University: </label>
-            <select
-              ref="userInput"
-              required
-              className="form-control"
-              value={this.state.university}
-              onChange={(e) => this.setState({ university: e.target.value })}
-            >
-              {this.state.universities.map(function (university) {
-                return (
-                  <option
-                    key={university} // must-have
-                    value={university}
+        <FormStyles>
+          <Form
+            onSubmit={this.onSubmit}
+            render={({ handleSubmit, form, submitting, pristine, values }) => (
+              <form onSubmit={handleSubmit}>
+                <h4>Basic Information</h4>
+                <Field
+                  name="university"
+                  initialValue={this.state.universities[0]}
+                  validate={required}
+                >
+                  {({ input, meta }) => (
+                    <div>
+                      <label>University</label>
+                      <select {...input} type="text">
+                        {this.state.universities.map(function (university) {
+                          return <option {...input}>{university}</option>;
+                        })}
+                      </select>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="subject"
+                  initialValue={this.state.subjects[0]}
+                  validate={required}
+                >
+                  {({ input, meta }) => (
+                    <div>
+                      <label>Subject</label>
+                      <select {...input} type="text">
+                        {this.state.subjects.map(function (subject) {
+                          return (
+                            <option
+                              key={subject} // must-have
+                            >
+                              {subject}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="code" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Course Code</label>
+                      <input {...input} type="text" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="name" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Course Name</label>
+                      <input {...input} type="text" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="semester"
+                  initialValue={this.state.semesters[0]}
+                  validate={required}
+                >
+                  {({ input, meta }) => (
+                    <div>
+                      <label>Semester</label>
+                      <select {...input} type="text">
+                        {this.state.semesters.map(function (semester) {
+                          return (
+                            <option
+                              key={semester} // must-have
+                            >
+                              {semester}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="year"
+                  initialValue={new Date().getFullYear()}
+                  validate={composeValidators(required, mustBeNumber)}
+                >
+                  {({ input, meta }) => (
+                    <div>
+                      <label>Year</label>
+                      <select {...input} type="number">
+                        {this.renderYears()}
+                      </select>
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="professor" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Professor / Lecturer</label>
+                      <input {...input} type="text" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <h4>Course Details</h4>
+                <Field name="general" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>General Comments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="tldr" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>TL;DR</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <h5>Syllabus</h5>
+                <Field name="syllabus">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Comments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="textbook" validate={required}>
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Main Textbook / Teaching Material</label>
+                      <input {...input} type="text" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <h5>Grading</h5>
+                <Field name="grading">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Comments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <h5>Workload</h5>
+                <Field name="workload">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Comments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="workloadrating"
+                  validate={composeValidators(required, mustBeNumber)}
+                >
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Rating</label>
+                      <input {...input} type="number" min="1" max="5" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="lectures">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Lectures</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field name="assignments">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Assignments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <h5>Exams</h5>
+                <Field name="exams">
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Comments</label>
+                      <textarea {...input} />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <Field
+                  name="examsrating"
+                  validate={composeValidators(required, mustBeNumber)}
+                >
+                  {({ input, meta }) => (
+                    <div className="form-group">
+                      <label>Rating</label>
+                      <input {...input} type="number" min="1" max="5" />
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )}
+                </Field>
+                <div className="buttons">
+                  <button type="submit" disabled={submitting}>
+                    Create Course Review
+                  </button>
+                  <button
+                    type="button"
+                    onClick={form.reset}
+                    disabled={submitting || pristine}
                   >
-                    {university}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Subject: </label>
-            <select
-              ref="userInput"
-              required
-              className="form-control"
-              value={this.state.subject}
-              onChange={(e) => this.setState({ subject: e.target.value })}
-            >
-              {this.state.subjects.map(function (subject) {
-                return (
-                  <option
-                    key={subject} // must-have
-                    value={subject}
-                  >
-                    {subject}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Course Code: </label>
-            <input
-              type="text"
-              required
-              className="form-control"
-              value={this.state.code}
-              onChange={(e) => this.setState({ code: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Course Name: </label>
-            <input
-              type="text"
-              required
-              className="form-control"
-              value={this.state.name}
-              onChange={(e) => this.setState({ name: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Semester Taken: </label>
-            <select
-              ref="userInput"
-              required
-              className="form-control"
-              value={this.state.semester}
-              onChange={(e) => this.setState({ semester: e.target.value })}
-            >
-              {this.state.semesters.map(function (semester) {
-                return (
-                  <option
-                    key={semester} // must-have
-                    value={semester}
-                  >
-                    {semester}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Professor or Lecturer: </label>
-            <input
-              type="text"
-              required
-              className="form-control"
-              value={this.state.professor}
-              onChange={(e) => this.setState({ professor: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Year: </label>
-            <select
-              type="number"
-              required
-              className="form-control"
-              value={this.state.year}
-              onChange={(e) => this.setState({ year: e.target.value })}
-            >
-              {this.renderYears()}
-            </select>
-          </div>
-          <h4>Course Details</h4>
-          <div className="form-group">
-            <label>General Comments: </label>
-            <textarea
-              className="form-control"
-              value={this.state.general}
-              onChange={(e) => this.setState({ general: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>TL;DR: </label>
-            <textarea
-              className="form-control"
-              value={this.state.tldr}
-              onChange={(e) => this.setState({ tldr: e.target.value })}
-            />
-          </div>
-          <h5>Syllabus</h5>
-          <div className="form-group">
-            <label>Comments: </label>
-            <textarea
-              className="form-control"
-              value={this.state.syllabus}
-              onChange={(e) => this.setState({ syllabus: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Main Textbook or Teaching Material: </label>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.textbook}
-              onChange={(e) => this.setState({ textbook: e.target.value })}
-            />
-          </div>
-          <h5>Grading</h5>
-          <div className="form-group">
-            <label>Comments: </label>
-            <textarea
-              required
-              className="form-control"
-              value={this.state.grading}
-              onChange={(e) => this.setState({ grading: e.target.value })}
-            />
-          </div>
-          <h5>Workload</h5>
-          <div className="form-group">
-            <label>Comments: </label>
-            <textarea
-              required
-              className="form-control"
-              value={this.state.workload}
-              onChange={(e) => this.setState({ workload: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Rating: </label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              required
-              className="form-control"
-              value={this.state.workloadrating}
-              onChange={(e) =>
-                this.setState({ workloadrating: e.target.value })
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>Lectures: </label>
-            <textarea
-              className="form-control"
-              value={this.state.lectures}
-              onChange={(e) => this.setState({ lectures: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Assignments: </label>
-            <textarea
-              className="form-control"
-              value={this.state.assignments}
-              onChange={(e) => this.setState({ assignments: e.target.value })}
-            />
-          </div>
-          <h5>Exams</h5>
-          <div className="form-group">
-            <label>Comments: </label>
-            <textarea
-              className="form-control"
-              value={this.state.exams}
-              onChange={(e) => this.setState({ exams: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Rating: </label>
-            <input
-              type="number"
-              min="1"
-              max="5"
-              required
-              className="form-control"
-              value={this.state.examsrating}
-              onChange={(e) => this.setState({ examsrating: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Date: </label>
-            <div>
-              <DatePicker
-                selected={this.state.date}
-                onChange={(date) => this.setState({ date })}
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <input
-              type="submit"
-              value="Create Course Review"
-              className="btn btn-primary"
-            />
-          </div>
-        </form>
+                    Reset
+                  </button>
+                </div>
+                <pre>{JSON.stringify(values, 0, 2)}</pre>
+              </form>
+            )}
+          />
+        </FormStyles>
       </div>
     );
   }

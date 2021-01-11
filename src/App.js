@@ -19,15 +19,16 @@ class App extends Component {
 
     this.state = {
       token: "",
+      isAuthed: false,
     };
   }
 
   setToken(token) {
-    this.setState({ token });
+    this.setState({ token, isAuthed: true });
   }
 
   removeToken() {
-    this.setState({ token: "" });
+    this.setState({ token: "", isAuthed: false });
   }
 
   render() {
@@ -36,12 +37,11 @@ class App extends Component {
         <div className="container">
           <Navbar
             removeToken={this.removeToken}
-            isAuthed={this.state.token.length > 0}
+            isAuthed={this.state.isAuthed}
           />
           <br />
           <Switch>
             <Route exact path="/" component={CoursesList} />
-            {/* <Route path="/create" component={CreateCourseReview} /> */}
             <Route
               path="/create"
               render={(props) => (
@@ -53,7 +53,12 @@ class App extends Component {
               render={(props) => <Login {...props} sendToken={this.setToken} />}
             />
             <Route path="/register" component={Register} />
-            <Route path="/edit/:id" component={EditCourseReview} />
+            <Route
+              path="/edit/:id"
+              render={(props) => (
+                <EditCourseReview {...props} token={this.state.token} />
+              )}
+            />
             <Route path="/:id" component={Course} />
             {/* <Route path="/user" component={CreateUser} /> */}
           </Switch>
