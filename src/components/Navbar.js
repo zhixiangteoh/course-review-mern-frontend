@@ -1,30 +1,48 @@
-import React from "react";
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../actions/authActions";
 
-const Navbar = ({ isAuthed, removeToken }) => {
-  console.log(`Authenticated: ${isAuthed}`);
-
-  const renderLogin = () => {
-    if (isAuthed) {
-      return (
-        <ul className="navbar-nav ml-auto">
-          <li className="navbar-item">
-            <Link to="/" onClick={removeToken} className="nav-link">
-              Logout
-            </Link>
-          </li>
-        </ul>
-      );
-    }
-    return (
+const Navbar = ({ auth, logout }) => {
+  const authLinks = () => (
+    <Fragment>
       <ul className="navbar-nav ml-auto">
         <li className="navbar-item">
-          <Link to="/login" className="nav-link">
-            Login/Register
+          <div className="nav-link">
+            {auth && auth.user ? `${auth.user.name}` : ""}
+          </div>
+        </li>
+        <li className="navbar-item">
+          <Link to="/logout" onClick={logout} className="nav-link">
+            Logout
           </Link>
         </li>
       </ul>
-    );
+    </Fragment>
+  );
+  const guestLinks = (
+    <Fragment>
+      <ul className="navbar-nav ml-auto">
+        <li className="navbar-item">
+          <Link to="/login" className="nav-link">
+            Login
+          </Link>
+        </li>
+        <li className="navbar-item">
+          <Link to="/register" className="nav-link">
+            Register
+          </Link>
+        </li>
+      </ul>
+    </Fragment>
+  );
+
+  const renderLogin = () => {
+    if (auth && auth.isAuthenticated) {
+      return authLinks();
+    } else {
+      return guestLinks;
+    }
   };
 
   return (
@@ -51,4 +69,6 @@ const Navbar = ({ isAuthed, removeToken }) => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({ auth: state.auth });
+
+export default connect(mapStateToProps, { logout })(Navbar);

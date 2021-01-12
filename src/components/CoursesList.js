@@ -1,11 +1,19 @@
-import React, { Component } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { logout } from "../actions/authActions";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 
 // functional component
-const Course = ({ course, deleteCourse }) => (
+const Course = ({
+  course,
+  deleteCourse,
+  user_id,
+  authorId,
+  isAuthenticated,
+}) => (
   <tr>
     <td>{course.university}</td>
     <td>{course.subject}</td>
@@ -22,41 +30,43 @@ const Course = ({ course, deleteCourse }) => (
     <td>{course.rating}</td>
     <td>{course.author}</td>
     <td>
-      <Link to={{ pathname: "/edit/" + course._id, state: course }}>edit</Link>{" "}
-      |{" "}
-      <a
-        href="#"
-        onClick={() => {
-          deleteCourse(course._id);
-        }}
-      >
-        delete
-      </a>
+      {isAuthenticated && user_id === authorId ? (
+        <Fragment>
+          <Link to={{ pathname: "/edit/" + course._id, state: course }}>
+            edit
+          </Link>{" "}
+          |{" "}
+          <Link
+            to={`/delete/${course._id}`}
+            onClick={() => {
+              deleteCourse(course._id);
+            }}
+          >
+            delete
+          </Link>
+        </Fragment>
+      ) : (
+        <div className="text-secondary">Unauthorized</div>
+      )}
     </td>
   </tr>
 );
 
-export default class CoursesList extends Component {
-  constructor(props) {
-    super(props);
+const CoursesList = ({ isAuthenticated, user }) => {
+  const [courses, setCourses] = useState([]);
 
-    this.deleteCourse = this.deleteCourse.bind(this);
-
-    this.state = { courses: [] };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     axios
       .get("http://localhost:5000/coursereviews/")
       .then((response) => {
-        this.setState({ courses: response.data });
+        setCourses(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  }, []);
 
-  deleteCourse(id) {
+  const deleteCourse = (id) => {
     axios
       .delete(`http://localhost:5000/coursereviews/${id}`)
       .then((response) => {
@@ -66,41 +76,49 @@ export default class CoursesList extends Component {
     this.setState({
       courses: this.state.courses.filter((el) => el._id !== id), // update courses array
     });
-  }
+  };
 
-  courseList() {
-    return this.state.courses.map((currentcourse) => {
+  const courseList = () => {
+    return courses.map((currentcourse) => {
       return (
         <Course
           course={currentcourse}
-          deleteCourse={this.deleteCourse}
+          deleteCourse={deleteCourse}
+          isAuthenticated={isAuthenticated}
+          user_id={user ? user._id : ""}
+          authorId={currentcourse.authorId}
           key={currentcourse._id} // must-have
         />
       );
     });
-  }
+  };
 
-  render() {
-    return (
-      <div>
-        <h3>Reviewed Courses</h3>
-        <table className="table">
-          <thead className="thead-light">
-            <tr>
-              <th>University</th>
-              <th>Subject</th>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Semester</th>
-              <th>Professor</th>
-              <th>Rating</th>
-              <th>Author</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{this.courseList()}</tbody>
-        </table>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <h3>Reviewed Courses</h3>
+      <table className="table">
+        <thead className="thead-light">
+          <tr>
+            <th>University</th>
+            <th>Subject</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Professor</th>
+            <th>Rating</th>
+            <th>Author</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>{courseList()}</tbody>
+      </table>
+    </div>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps, null)(CoursesList);
