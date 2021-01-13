@@ -1,3 +1,4 @@
+export const API_URL = "https://course-review-mern-backend.herokuapp.com/";
 export const UNIVERSITIES = [
   "National University of Singapore",
   "Nanyang Technological University, Singapore",

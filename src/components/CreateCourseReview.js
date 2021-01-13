@@ -5,7 +5,7 @@ import { Form, Field } from "react-final-form";
 import axios from "axios";
 
 import FormStyles from "./FormStyles";
-import { UNIVERSITIES, SUBJECTS, SEMESTERS } from "../enums";
+import { UNIVERSITIES, SUBJECTS, SEMESTERS, API_URL } from "../enums";
 
 class CreateCourseReview extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class CreateCourseReview extends Component {
     console.log(coursereview);
 
     axios
-      .post("http://localhost:5000/coursereviews/add", coursereview)
+      .post(`${API_URL}/coursereviews/add`, coursereview)
       .then((res) => console.log(res.data));
 
     this.props.history.push("/");

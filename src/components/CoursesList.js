@@ -5,6 +5,8 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 
+import { API_URL } from "../enums";
+
 // functional component
 const Course = ({
   course,
@@ -56,7 +58,7 @@ const CoursesList = ({ isAuthenticated, user }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/coursereviews/")
+      .get(`${API_URL}/coursereviews/`)
       .then((response) => {
         setCourses(response.data);
       })
@@ -66,11 +68,9 @@ const CoursesList = ({ isAuthenticated, user }) => {
   }, []);
 
   const deleteCourse = (id) => {
-    axios
-      .delete(`http://localhost:5000/coursereviews/${id}`)
-      .then((response) => {
-        console.log(response.data);
-      });
+    axios.delete(`${API_URL}/coursereviews/${id}`).then((response) => {
+      console.log(response.data);
+    });
 
     this.setState({
       courses: this.state.courses.filter((el) => el._id !== id), // update courses array

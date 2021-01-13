@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { returnErrors } from "./errorActions";
 import {
   USER_LOADED,
@@ -10,6 +11,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
 } from "./types";
+import { API_URL } from "../enums";
 
 // Check token & load user
 export const loadUser = () => (dispatch, getState) => {
@@ -17,7 +19,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get("http://localhost:5000/auth/user", tokenConfig(getState))
+    .get(`${API_URL}/auth/user`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: USER_LOADED,
@@ -45,7 +47,7 @@ export const register = ({ name, email, password }) => (dispatch) => {
   const body = JSON.stringify({ name, email, password });
 
   axios
-    .post("http://localhost:5000/auth/register", body, config)
+    .post(`${API_URL}/auth/register`, body, config)
     .then((res) =>
       dispatch({
         type: REGISTER_SUCCESS,
@@ -75,7 +77,7 @@ export const login = ({ email, password }) => (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   axios
-    .post("http://localhost:5000/auth/login", body, config)
+    .post(`${API_URL}/auth/login`, body, config)
     .then((res) =>
       dispatch({
         type: LOGIN_SUCCESS,

@@ -6,7 +6,7 @@ import { Form, Field } from "react-final-form";
 import axios from "axios";
 
 import FormStyles from "./FormStyles";
-import { UNIVERSITIES, SUBJECTS, SEMESTERS } from "../enums";
+import { UNIVERSITIES, SUBJECTS, SEMESTERS, API_URL } from "../enums";
 
 let starting = {};
 
@@ -33,7 +33,7 @@ class EditCourseReview extends Component {
     }
 
     axios
-      .get("http://localhost:5000/coursereviews/" + this.props.match.params.id)
+      .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
       .then((response) => {
         starting = response.data;
         starting.semester = response.data.semester.substr(
@@ -63,8 +63,7 @@ class EditCourseReview extends Component {
 
     axios
       .post(
-        "http://localhost:5000/coursereviews/update/" +
-          this.props.match.params.id,
+        `${API_URL}/coursereviews/update/` + this.props.match.params.id,
         coursereview
       )
       .then((res) => console.log(res.data));

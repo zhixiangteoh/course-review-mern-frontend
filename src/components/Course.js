@@ -3,6 +3,8 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 
+import { API_URL } from "../enums";
+
 export default class Course extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +82,7 @@ export default class Course extends Component {
     }
 
     axios
-      .get("http://localhost:5000/coursereviews/" + this.props.match.params.id)
+      .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
       .then((response) => {
         this.setState({
           university: response.data.university,
@@ -105,19 +107,6 @@ export default class Course extends Component {
         });
       })
       .catch(function (error) {
-        console.log(error);
-      });
-
-    axios
-      .get("http://localhost:5000/users/")
-      .then((response) => {
-        if (response.data.length > 0) {
-          this.setState({
-            users: response.data.map((user) => user.username),
-          });
-        }
-      })
-      .catch((error) => {
         console.log(error);
       });
   }
