@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { logout } from "../actions/authActions";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
