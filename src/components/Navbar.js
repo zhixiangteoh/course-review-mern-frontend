@@ -46,15 +46,26 @@ const Navbar = ({ auth, logout }) => {
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/" className="navbar-brand">
         Course Review
       </Link>
-      <div className="collapse navbar-collapse">
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li className="navbar-item">
+          <li className="navbar-item active">
             <Link to="/" className="nav-link">
-              Courses
+              Courses <span className="sr-only">(current)</span>
             </Link>
           </li>
           <li className="navbar-item">
@@ -63,8 +74,8 @@ const Navbar = ({ auth, logout }) => {
             </Link>
           </li>
         </ul>
+        {renderLogin()}
       </div>
-      <div className="collapse navbar-collapse">{renderLogin()}</div>
     </nav>
   );
 };

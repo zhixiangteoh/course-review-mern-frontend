@@ -58,15 +58,15 @@ class CreateCourseReview extends Component {
     return (
       <div>
         <h3>Create New Course Review</h3>
-        <p>
-          Creating course review as{" "}
-          <span className="text-info">
-            {this.props.user.name} ({this.props.user.email})
-          </span>
-          :
-        </p>
         {this.props.isAuthenticated ? (
           <FormStyles>
+            <p>
+              Creating course review as{" "}
+              <span className="text-info">
+                {this.props.user.name} ({this.props.user.email})
+              </span>
+              :
+            </p>
             <Form
               onSubmit={this.onSubmit}
               render={({

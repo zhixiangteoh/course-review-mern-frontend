@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import "jquery/dist/jquery.min.js";
+import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   BrowserRouter as Router,
@@ -27,7 +29,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <div className="container">
+        <div className="container-fluid">
           <Navbar />
           <br />
           <Switch>
@@ -45,7 +47,6 @@ const App = () => {
               render={(props) => <EditCourseReview {...props} />}
             />
             <Route path="/:id" component={Course} />
-            {/* <Route path="/user" component={CreateUser} /> */}
           </Switch>
         </div>
       </Router>

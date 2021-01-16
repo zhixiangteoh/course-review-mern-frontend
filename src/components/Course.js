@@ -79,36 +79,36 @@ export default class Course extends Component {
       });
 
       return;
-    }
-
-    axios
-      .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
-      .then((response) => {
-        this.setState({
-          university: response.data.university,
-          subject: response.data.subject,
-          code: response.data.code,
-          name: response.data.name,
-          semester: response.data.semester,
-          professor: response.data.professor,
-          rating: response.data.rating,
-          author: response.data.author,
-          workloadrating: response.data.workloadrating,
-          examsrating: response.data.examsrating,
-          general: response.data.general,
-          tldr: response.data.tldr,
-          syllabus: response.data.syllabus,
-          textbook: response.data.textbook,
-          grading: response.data.grading,
-          workload: response.data.workload,
-          lectures: response.data.lectures,
-          assignments: response.data.assignments,
-          exams: response.data.exams,
+    } else {
+      axios
+        .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
+        .then((response) => {
+          this.setState({
+            university: response.data.university,
+            subject: response.data.subject,
+            code: response.data.code,
+            name: response.data.name,
+            semester: response.data.semester,
+            professor: response.data.professor,
+            rating: response.data.rating,
+            author: response.data.author,
+            workloadrating: response.data.workloadrating,
+            examsrating: response.data.examsrating,
+            general: response.data.general,
+            tldr: response.data.tldr,
+            syllabus: response.data.syllabus,
+            textbook: response.data.textbook,
+            grading: response.data.grading,
+            workload: response.data.workload,
+            lectures: response.data.lectures,
+            assignments: response.data.assignments,
+            exams: response.data.exams,
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    }
   }
 
   render() {

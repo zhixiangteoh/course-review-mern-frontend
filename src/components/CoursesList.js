@@ -95,22 +95,24 @@ const CoursesList = ({ isAuthenticated, user }) => {
   return (
     <div>
       <h3>Reviewed Courses</h3>
-      <table className="table">
-        <thead className="thead-light">
-          <tr>
-            <th>University</th>
-            <th>Subject</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Semester</th>
-            <th>Professor</th>
-            <th>Rating</th>
-            <th>Author</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{courseList()}</tbody>
-      </table>
+      <div className="table-responsive">
+        <table className="table">
+          <thead className="thead-light">
+            <tr>
+              <th>University</th>
+              <th>Subject</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Semester</th>
+              <th>Professor</th>
+              <th>Rating</th>
+              <th>Author</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{courseList()}</tbody>
+        </table>
+      </div>
     </div>
   );
 };
