@@ -111,9 +111,7 @@ const CoursesList = ({ isAuthenticated, user }) => {
       console.log(response.data);
     });
 
-    this.setState({
-      courses: this.state.courses.filter((el) => el._id !== id), // update courses array
-    });
+    setCourses(courses.filter((el) => el._id !== id));
   };
 
   // 1. Create a React component
