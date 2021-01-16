@@ -7,51 +7,90 @@ import gfm from "remark-gfm";
 
 import { API_URL } from "../enums";
 
+// algolia
+import algoliasearch from "algoliasearch/lite";
+import {
+  InstantSearch,
+  SearchBox,
+  Highlight,
+  connectHits,
+} from "react-instantsearch-dom";
+
+const client = algoliasearch("STBZR8UCCC", "f1b7a3b1b69ee5c64ad8b07992a0ef30");
+
 // functional component
 const Course = ({
   course,
   deleteCourse,
+  isAuthenticated,
   user_id,
   authorId,
-  isAuthenticated,
-}) => (
-  <tr>
-    <td>{course.university}</td>
-    <td>{course.subject}</td>
-    <td>{course.code}</td>
-    <td>
-      <Link to={{ pathname: "/" + course._id, state: course }}>
-        {course.name}
-      </Link>
-    </td>
-    <td>{course.semester}</td>
-    <td>
-      <ReactMarkdown plugins={[gfm]} source={`${course.professor}`} />
-    </td>
-    <td>{course.rating}</td>
-    <td>{course.author}</td>
-    <td>
-      {isAuthenticated && user_id === authorId ? (
-        <Fragment>
-          <Link to={{ pathname: "/edit/" + course._id, state: course }}>
-            edit
-          </Link>{" "}
-          |{" "}
-          <Link
-            to={`/delete/${course._id}`}
-            onClick={() => {
-              deleteCourse(course._id);
-            }}
-          >
-            delete
-          </Link>
-        </Fragment>
-      ) : (
-        <div className="text-secondary">Unauthorized</div>
-      )}
-    </td>
-  </tr>
-);
+}) => {
+  return (
+    <tr>
+      <td>
+        <Highlight attribute="university" hit={course}>
+          {course.university}
+        </Highlight>
+      </td>
+      <td>
+        <Highlight attribute="subject" hit={course}>
+          {course.subject}
+        </Highlight>
+      </td>
+      <td>
+        <Highlight attribute="code" hit={course}>
+          {course.code}
+        </Highlight>
+      </td>
+      <td>
+        <Link to={{ pathname: "/" + course._id, state: course }}>
+          <Highlight attribute="name" hit={course}>
+            {course.name}
+          </Highlight>
+        </Link>
+      </td>
+      <td>
+        <Highlight attribute="semester" hit={course}>
+          {course.semester}
+        </Highlight>
+      </td>
+      <td>
+        <ReactMarkdown plugins={[gfm]} source={`${course.professor}`} />
+      </td>
+      <td>
+        <Highlight attribute="rating" hit={course}>
+          {course.rating}
+        </Highlight>
+      </td>
+      <td>
+        <Highlight attribute="author" hit={course}>
+          {course.author}
+        </Highlight>
+      </td>
+      <td>
+        {isAuthenticated && user_id === authorId ? (
+          <Fragment>
+            <Link to={{ pathname: "/edit/" + course._id, state: course }}>
+              edit
+            </Link>{" "}
+            |{" "}
+            <Link
+              to={`/delete/${course._id}`}
+              onClick={() => {
+                deleteCourse(course._id);
+              }}
+            >
+              delete
+            </Link>
+          </Fragment>
+        ) : (
+          <div className="text-secondary">Unauthorized</div>
+        )}
+      </td>
+    </tr>
+  );
+};
 
 const CoursesList = ({ isAuthenticated, user }) => {
   const [courses, setCourses] = useState([]);
@@ -77,42 +116,55 @@ const CoursesList = ({ isAuthenticated, user }) => {
     });
   };
 
-  const courseList = () => {
-    return courses.map((currentcourse) => {
+  // 1. Create a React component
+  const Hits = ({ hits }) => {
+    return hits.map((hit) => {
       return (
         <Course
-          course={currentcourse}
+          course={hit}
           deleteCourse={deleteCourse}
           isAuthenticated={isAuthenticated}
           user_id={user ? user._id : ""}
-          authorId={currentcourse.authorId}
-          key={currentcourse._id} // must-have
+          authorId={hit.authorId}
+          key={hit._id} // must-have
         />
       );
     });
   };
 
+  // 2. Connect the component using the connector
+  const CustomHits = connectHits(Hits);
+
   return (
     <div>
       <h3>Reviewed Courses</h3>
-      <div className="table-responsive">
-        <table className="table">
-          <thead className="thead-light">
-            <tr>
-              <th>University</th>
-              <th>Subject</th>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Semester</th>
-              <th>Professor</th>
-              <th>Rating</th>
-              <th>Author</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{courseList()}</tbody>
-        </table>
-      </div>
+      <InstantSearch
+        searchClient={client}
+        indexName="course-review-mern-frontend"
+      >
+        <SearchBox />
+        <br />
+        <div className="table-responsive">
+          <table className="table">
+            <thead className="thead-light">
+              <tr>
+                <th>University</th>
+                <th>Subject</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Semester</th>
+                <th>Professor</th>
+                <th>Rating</th>
+                <th>Author</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <CustomHits />
+            </tbody>
+          </table>
+        </div>
+      </InstantSearch>
     </div>
   );
 };

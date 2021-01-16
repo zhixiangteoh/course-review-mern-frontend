@@ -63,7 +63,7 @@ const Navbar = ({ auth, logout }) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li className="navbar-item active">
+          <li className="navbar-item">
             <Link to="/" className="nav-link">
               Courses <span className="sr-only">(current)</span>
             </Link>

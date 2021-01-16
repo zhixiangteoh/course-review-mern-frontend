@@ -56,6 +56,16 @@ export default styled.div`
     color: #222;
   }
 
+  .md {
+    display: block;
+    border: 1px solid #ccc;
+    background: rgba(0, 0, 0, 0.1);
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+    color: grey;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
   form {
     margin: 10px auto;
     border: 1px solid #ccc;
