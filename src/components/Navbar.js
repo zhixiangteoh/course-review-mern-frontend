@@ -3,6 +3,10 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../actions/authActions";
 
+import logo from "./logo.png";
+
+console.log(logo);
+
 const Navbar = ({ auth, logout }) => {
   const authLinks = () => (
     <Fragment>
@@ -48,7 +52,7 @@ const Navbar = ({ auth, logout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/" className="navbar-brand">
-        Course Review
+        <img src={logo} style={{ maxWidth: 40 }} alt="" />
       </Link>
       <button
         className="navbar-toggler"
