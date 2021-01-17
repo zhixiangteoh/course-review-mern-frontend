@@ -65,9 +65,10 @@ class EditCourseReview extends Component {
         `${API_URL}/coursereviews/update/` + this.props.match.params.id,
         coursereview
       )
-      .then((res) => console.log(res.data));
-
-    this.props.history.push("/");
+      .then((res) => {
+        console.log(res.data);
+        this.props.history.push("/");
+      });
   }
 
   render() {

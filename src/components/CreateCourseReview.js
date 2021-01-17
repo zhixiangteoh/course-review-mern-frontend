@@ -23,11 +23,10 @@ class CreateCourseReview extends Component {
 
     console.log(coursereview);
 
-    axios
-      .post(`${API_URL}/coursereviews/add`, coursereview)
-      .then((res) => console.log(res.data));
-
-    this.props.history.push("/");
+    axios.post(`${API_URL}/coursereviews/add`, coursereview).then((res) => {
+      console.log(res.data);
+      this.props.history.push("/");
+    });
   }
 
   render() {

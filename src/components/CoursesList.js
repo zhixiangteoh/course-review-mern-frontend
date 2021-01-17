@@ -20,7 +20,6 @@ const client = algoliasearch("STBZR8UCCC", "f1b7a3b1b69ee5c64ad8b07992a0ef30");
 
 // functional component
 const Course = ({
-  hit,
   course,
   deleteCourse,
   isAuthenticated,
@@ -28,58 +27,58 @@ const Course = ({
   authorId,
 }) => {
   return (
-    <tr>
+    <tr key={course._id}>
       <td>
-        <Highlight attribute="university" hit={hit}>
-          {hit.university}
+        <Highlight attribute="university" hit={course}>
+          {course.university}
         </Highlight>
       </td>
       <td>
-        <Highlight attribute="subject" hit={hit}>
-          {hit.subject}
+        <Highlight attribute="subject" hit={course}>
+          {course.subject}
         </Highlight>
       </td>
       <td>
-        <Highlight attribute="code" hit={hit}>
-          {hit.code}
+        <Highlight attribute="code" hit={course}>
+          {course.code}
         </Highlight>
       </td>
       <td>
-        <Link to={{ pathname: "/" + hit._id, state: course }}>
-          <Highlight attribute="name" hit={hit}>
-            {hit.name}
+        <Link to={{ pathname: "/" + course._id, state: course }}>
+          <Highlight attribute="name" hit={course}>
+            {course.name}
           </Highlight>
         </Link>
       </td>
       <td>
-        <Highlight attribute="semester" hit={hit}>
-          {hit.semester}
+        <Highlight attribute="semester" hit={course}>
+          {course.semester}
         </Highlight>
       </td>
       <td>
-        <ReactMarkdown plugins={[gfm]} source={`${hit.professor}`} />
+        <ReactMarkdown plugins={[gfm]} source={`${course.professor}`} />
       </td>
       <td>
-        <Highlight attribute="rating" hit={hit}>
-          {hit.rating}
+        <Highlight attribute="rating" hit={course}>
+          {course.rating}
         </Highlight>
       </td>
       <td>
-        <Highlight attribute="author" hit={hit}>
-          {hit.author}
+        <Highlight attribute="author" hit={course}>
+          {course.author}
         </Highlight>
       </td>
       <td>
         {isAuthenticated && user_id === authorId ? (
           <Fragment>
-            <Link to={{ pathname: "/edit/" + hit._id, state: course }}>
+            <Link to={{ pathname: "/edit/" + course._id, state: course }}>
               edit
             </Link>{" "}
             |{" "}
             <Link
-              to={`/delete/${hit._id}`}
+              to={`/delete/${course._id}`}
               onClick={() => {
-                deleteCourse(hit._id);
+                deleteCourse(course._id);
               }}
             >
               delete
@@ -120,8 +119,7 @@ const CoursesList = ({ isAuthenticated, user }) => {
     return hits.map((hit) => {
       return (
         <Course
-          hit={hit}
-          course={courses.filter((course) => course._id === hit._id)}
+          course={hit}
           deleteCourse={deleteCourse}
           isAuthenticated={isAuthenticated}
           user_id={user ? user._id : ""}
@@ -138,10 +136,7 @@ const CoursesList = ({ isAuthenticated, user }) => {
   return (
     <div>
       <h3>Reviewed Courses</h3>
-      <InstantSearch
-        searchClient={client}
-        indexName="course-review-mern-frontend"
-      >
+      <InstantSearch searchClient={client} indexName="course-review-mern">
         <SearchBox />
         <br />
         <div className="table-responsive">
