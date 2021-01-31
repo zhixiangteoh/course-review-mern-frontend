@@ -16,7 +16,7 @@ const Home = ({ history }) => {
           Login to create course reviews, otherwise simply search for posted
           course reviews!
         </p>
-        <div id="home-buttons" class="mx-auto">
+        <div id="home-buttons" className="mx-auto">
           <button
             type="button"
             className="btn btn-primary mx-2"

@@ -27,21 +27,21 @@ const Intro = () => {
         To create a course review, click on{" "}
         <span className="font-weight-bold">Create Course Review</span> in the
         navigation bar.
-        <pre className="ml-4 mt-1 text-light">
-          Note: Markdown is supported on all forms!
-        </pre>
       </p>
+      <pre className="ml-4 mt-1 text-light">
+        Note: Markdown is supported on all forms!
+      </pre>
       <hr />
       <h4>Edit your course review</h4>
       <p>
         Humans are not perfect! Edit your course reviews from the list of
         reviews by clicking the <span className="font-weight-bold">Edit</span>{" "}
         link in the Actions column associated with your review.
-        <pre className="ml-4 mt-1 text-light">
-          Note: If you are not logged in, you won't be authorized to edit or
-          delete a review!
-        </pre>
       </p>
+      <pre className="ml-4 mt-1 text-light">
+        Note: If you are not logged in, you won't be authorized to edit or
+        delete a review!
+      </pre>
       <hr />
       <h4>Delete your course review</h4>
       <p>
@@ -49,10 +49,10 @@ const Intro = () => {
         review? Simply click on the{" "}
         <span className="font-weight-bold">Delete</span> link in the Actions
         column associated with your review to delete it.
-        <pre className="ml-4 mt-1 text-light">
-          Note: Deleting is irreversible!
-        </pre>
       </p>
+      <pre className="ml-4 mt-1 text-light">
+        Note: Deleting is irreversible!
+      </pre>
       <hr />
       <h4>View other course reviews</h4>
       <p>
