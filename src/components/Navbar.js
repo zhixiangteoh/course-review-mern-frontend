@@ -50,7 +50,7 @@ const Navbar = ({ auth, logout }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <Link to="/" className="navbar-brand">
         <img src={logo} style={{ maxWidth: 40 }} alt="" />
       </Link>

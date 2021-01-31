@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import CoursesList from "./components/CoursesList";
+import Home from "./components/Home";
 import EditCourseReview from "./components/EditCourseReview";
 import CreateCourseReview from "./components/CreateCourseReview";
 import Course from "./components/Course";
@@ -29,11 +29,11 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <Navbar />
         <div className="container-fluid">
-          <Navbar />
           <br />
           <Switch>
-            <Route exact path="/" component={CoursesList} />
+            <Route exact path="/" component={Home} />
             <Route
               path="/create"
               render={(props) => <CreateCourseReview {...props} />}

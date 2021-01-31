@@ -135,7 +135,6 @@ const CoursesList = ({ isAuthenticated, user }) => {
 
   return (
     <div>
-      <h3>Reviewed Courses</h3>
       <InstantSearch searchClient={client} indexName="course-review-mern">
         <SearchBox />
         <br />

@@ -1,0 +1,16 @@
+pre {
+  white-space: pre-wrap;
+}
+
+.dotted-underline {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+#intro a {
+  color: #fdffa0;
+}
+
+#intro a:hover {
+  color: #ffe9a0;
+}
