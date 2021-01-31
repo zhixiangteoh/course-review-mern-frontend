@@ -132,6 +132,7 @@ Zhixiang Teoh - [linkedin](https://www.linkedin.com/in/zhixiangteoh) - [facebook
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+* [JSON Web Tokens](https://jwt.io/)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 * [Font Awesome](https://fontawesome.com)
 
