@@ -32,7 +32,7 @@ const Activate = ({
     if (isAuthenticated) {
       history.push("/login");
     }
-  }, [error, isAuthenticated]);
+  }, [error, isAuthenticated, history]);
 
   return (
     <div>

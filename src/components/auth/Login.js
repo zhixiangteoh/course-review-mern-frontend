@@ -35,7 +35,7 @@ const Login = ({
     if (isAuthenticated) {
       history.push("/");
     }
-  }, [error, isAuthenticated]);
+  }, [error, isAuthenticated, history]);
 
   return (
     <div>
