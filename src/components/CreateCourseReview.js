@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import CourseReviewForm from "./CourseReviewForm";
-import { API_URL, SEMESTERS, SUBJECTS, UNIVERSITIES } from "../enums";
+import { SEMESTERS, SUBJECTS, UNIVERSITIES } from "../enums";
 
 class CreateCourseReview extends Component {
   constructor(props) {
@@ -23,10 +23,12 @@ class CreateCourseReview extends Component {
 
     console.log(coursereview);
 
-    axios.post(`${API_URL}/coursereviews/add`, coursereview).then((res) => {
-      console.log(res.data);
-      this.props.history.push("/");
-    });
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/coursereviews/add`, coursereview)
+      .then((res) => {
+        console.log(res.data);
+        this.props.history.push("/");
+      });
   }
 
   render() {

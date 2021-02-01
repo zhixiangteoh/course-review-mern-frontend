@@ -2,7 +2,6 @@ import React from "react";
 
 import "./Intro.css";
 
-const repoURL = "https://github.com/zhixiangteoh/course-review-mern-frontend";
 const backgroundColor = "#244180";
 const color = "#f0f0f0";
 
@@ -81,7 +80,11 @@ const Intro = () => {
         development. For all issues and suggestions related to the website,
         please feel free to{" "}
         <span className="dotted-underline">
-          <a href={`${repoURL}/issues`} target="_blank" rel="noreferrer">
+          <a
+            href={`${process.env.CLIENT_URL}/issues`}
+            target="_blank"
+            rel="noreferrer"
+          >
             create an issue
           </a>
         </span>{" "}

@@ -4,17 +4,12 @@ import { register } from "../../actions/authActions";
 import { clearErrors } from "../../actions/errorActions";
 import { REGISTER_FAIL } from "../../actions/types";
 
-const Register = ({
-  isAuthenticated,
-  error,
-  register,
-  clearErrors,
-  history,
-}) => {
+const Register = ({ auth, error, register }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -30,17 +25,26 @@ const Register = ({
     } else {
       setMsg(null);
     }
-
-    // If authenticated, login and redirect to home page
-    if (isAuthenticated) {
-      history.push("/");
+    // Check for register success
+    if (auth.isAwaitingActivation) {
+      setSuccess(auth.message);
     }
-  }, [error, isAuthenticated, history]);
+  }, [error, auth.isAwaitingActivation, auth.message]);
+
+  const renderMessage = () => {
+    if (msg && !success) {
+      return <p className="text-danger">{msg}</p>;
+    } else if (success) {
+      return <p className="text-success">{success}</p>;
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div>
       <form onSubmit={onSubmit}>
-        {msg ? <p className="text-danger">{msg}</p> : null}
+        {renderMessage()}
         <div className="form-group">
           <label>Name</label>
           <input
@@ -69,11 +73,7 @@ const Register = ({
           />
         </div>
         <div className="form-group">
-          <input
-            type="submit"
-            value="Register and Login"
-            className="btn btn-primary"
-          />
+          <input type="submit" value="Register" className="btn btn-primary" />
         </div>
       </form>
     </div>
@@ -81,8 +81,8 @@ const Register = ({
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { register, clearErrors })(Register);

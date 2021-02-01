@@ -10,8 +10,9 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  ACTIVATE_SUCCESS,
+  ACTIVATE_FAIL,
 } from "./types";
-import { API_URL } from "../enums";
 
 // Check token & load user
 export const loadUser = () => (dispatch, getState) => {
@@ -19,7 +20,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get(`${API_URL}/auth/user`, tokenConfig(getState))
+    .get(`${process.env.REACT_APP_API_URL}/auth/user`, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: USER_LOADED,
@@ -47,7 +48,7 @@ export const register = ({ name, email, password }) => (dispatch) => {
   const body = JSON.stringify({ name, email, password });
 
   axios
-    .post(`${API_URL}/auth/register`, body, config)
+    .post(`${process.env.REACT_APP_API_URL}/auth/register`, body, config)
     .then((res) =>
       dispatch({
         type: REGISTER_SUCCESS,
@@ -60,6 +61,36 @@ export const register = ({ name, email, password }) => (dispatch) => {
       );
       dispatch({
         type: REGISTER_FAIL,
+      });
+    });
+};
+
+// Activate from link
+export const activate = ({ token }) => (dispatch) => {
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  // Request body
+  const body = JSON.stringify({ token });
+
+  axios
+    .post(`${process.env.REACT_APP_API_URL}/auth/activate`, body, config)
+    .then((res) =>
+      dispatch({
+        type: ACTIVATE_SUCCESS,
+        payload: res.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "ACTIVATE_FAIL")
+      );
+      dispatch({
+        type: ACTIVATE_FAIL,
       });
     });
 };
@@ -77,7 +108,7 @@ export const login = ({ email, password }) => (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   axios
-    .post(`${API_URL}/auth/login`, body, config)
+    .post(`${process.env.REACT_APP_API_URL}/auth/login`, body, config)
     .then((res) =>
       dispatch({
         type: LOGIN_SUCCESS,

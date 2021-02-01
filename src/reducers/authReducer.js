@@ -7,6 +7,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  ACTIVATE_SUCCESS,
+  ACTIVATE_FAIL,
 } from "../actions/types";
 
 const initialState = {
@@ -31,19 +33,27 @@ export default function (state = initialState, action) {
         isLoading: false,
         user: action.payload,
       };
-    case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
+      return {
+        ...state,
+        ...action.payload,
+        isAwaitingActivation: true,
+      };
+    case LOGIN_SUCCESS:
+    case ACTIVATE_SUCCESS:
       localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        isAwaitingActivation: false,
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
     case REGISTER_FAIL:
+    case ACTIVATE_FAIL:
       localStorage.removeItem("token");
       return {
         ...state,

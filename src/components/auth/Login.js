@@ -31,11 +31,11 @@ const Login = ({
       setMsg(null);
     }
 
-    // If authenticated, close modal
+    // If authenticated
     if (isAuthenticated) {
       history.push("/");
     }
-  }, [error, isAuthenticated, history]);
+  }, [error, isAuthenticated]);
 
   return (
     <div>

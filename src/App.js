@@ -16,6 +16,9 @@ import CreateCourseReview from "./components/CreateCourseReview";
 import Course from "./components/Course";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Activate from "./components/auth/Activate";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -40,13 +43,28 @@ const App = () => {
             />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            {/* <Route
+              path="/users/password/forget"
+              exact
+              component={ForgotPassword}
+            />
+            <Route
+              path="/users/password/reset/:token"
+              exact
+              component={ResetPassword}
+            /> */}
+            <Route
+              path="/users/activate/:token"
+              exact
+              render={(props) => <Activate {...props} />}
+            />
             <Redirect from="/logout" to="/" />
             <Redirect from="/delete" to="/" />
             <Route
               path="/edit/:id"
               render={(props) => <EditCourseReview {...props} />}
             />
-            <Route path="/:id" component={Course} />
+            <Route path="/:id" exact component={Course} />
           </Switch>
         </div>
       </Router>

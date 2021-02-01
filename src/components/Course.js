@@ -3,8 +3,6 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 
-import { API_URL } from "../enums";
-
 export default class Course extends Component {
   constructor(props) {
     super(props);
@@ -81,7 +79,10 @@ export default class Course extends Component {
       return;
     } else {
       axios
-        .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
+        .get(
+          `${process.env.REACT_APP_API_URL}/coursereviews/` +
+            this.props.match.params.id
+        )
         .then((response) => {
           this.setState({
             university: response.data.university,

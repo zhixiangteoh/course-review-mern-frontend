@@ -5,8 +5,6 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 
-import { API_URL } from "../enums";
-
 // algolia
 import algoliasearch from "algoliasearch/lite";
 import {
@@ -97,19 +95,21 @@ const CoursesList = ({ isAuthenticated, user }) => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/coursereviews/`)
+      .get(`${process.env.REACT_APP_API_URL}/coursereviews/`)
       .then((response) => {
         setCourses(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, []);
 
   const deleteCourse = (id) => {
-    axios.delete(`${API_URL}/coursereviews/${id}`).then((response) => {
-      console.log(response.data);
-    });
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/coursereviews/${id}`)
+      .then((response) => {
+        console.log(response.data);
+      });
 
     setCourses(courses.filter((el) => el._id !== id));
   };

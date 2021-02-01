@@ -5,8 +5,6 @@ import { logout } from "../actions/authActions";
 
 import logo from "./logo.png";
 
-console.log(logo);
-
 const Navbar = ({ auth, logout }) => {
   const authLinks = () => (
     <Fragment>

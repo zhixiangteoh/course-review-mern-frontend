@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import CourseReviewForm from "./CourseReviewForm";
-import { API_URL } from "../enums";
 
 let starting = {};
 
@@ -32,7 +31,10 @@ class EditCourseReview extends Component {
     }
 
     axios
-      .get(`${API_URL}/coursereviews/` + this.props.match.params.id)
+      .get(
+        `${process.env.REACT_APP_API_URL}/coursereviews/` +
+          this.props.match.params.id
+      )
       .then((response) => {
         starting = response.data;
         starting.semester = response.data.semester.substr(
@@ -62,7 +64,8 @@ class EditCourseReview extends Component {
 
     axios
       .post(
-        `${API_URL}/coursereviews/update/` + this.props.match.params.id,
+        `${process.env.REACT_APP_API_URL}/coursereviews/update/` +
+          this.props.match.params.id,
         coursereview
       )
       .then((res) => {
