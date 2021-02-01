@@ -43,7 +43,7 @@ const App = () => {
             />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
-            {/* <Route
+            <Route
               path="/users/password/forget"
               exact
               component={ForgotPassword}
@@ -52,7 +52,7 @@ const App = () => {
               path="/users/password/reset/:token"
               exact
               component={ResetPassword}
-            /> */}
+            />
             <Route
               path="/users/activate/:token"
               exact
