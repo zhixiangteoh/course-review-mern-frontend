@@ -23,6 +23,7 @@ import ResetPassword from "./components/auth/ResetPassword";
 import { Provider } from "react-redux";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
+import UserProvider from "./providers/UserProvider";
 
 const App = () => {
   useEffect(() => {
@@ -30,45 +31,47 @@ const App = () => {
   });
 
   return (
-    <Provider store={store}>
-      <Router>
-        <Navbar />
-        <div className="container-fluid">
-          <br />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route
-              path="/create"
-              render={(props) => <CreateCourseReview {...props} />}
-            />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route
-              path="/users/password/forget"
-              exact
-              component={ForgotPassword}
-            />
-            <Route
-              path="/users/password/reset/:token"
-              exact
-              component={ResetPassword}
-            />
-            <Route
-              path="/users/activate/:token"
-              exact
-              render={(props) => <Activate {...props} />}
-            />
-            <Redirect from="/logout" to="/" />
-            <Redirect from="/delete" to="/" />
-            <Route
-              path="/edit/:id"
-              render={(props) => <EditCourseReview {...props} />}
-            />
-            <Route path="/:id" exact component={Course} />
-          </Switch>
-        </div>
-      </Router>
-    </Provider>
+    <UserProvider>
+      <Provider store={store}>
+        <Router>
+          <Navbar />
+          <div className="container-fluid">
+            <br />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route
+                path="/create"
+                render={(props) => <CreateCourseReview {...props} />}
+              />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+              <Route
+                path="/users/password/forget"
+                exact
+                component={ForgotPassword}
+              />
+              <Route
+                path="/users/password/reset/:token"
+                exact
+                component={ResetPassword}
+              />
+              <Route
+                path="/users/activate/:token"
+                exact
+                render={(props) => <Activate {...props} />}
+              />
+              <Redirect from="/logout" to="/" />
+              <Redirect from="/delete" to="/" />
+              <Route
+                path="/edit/:id"
+                render={(props) => <EditCourseReview {...props} />}
+              />
+              <Route path="/:id" exact component={Course} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
+    </UserProvider>
   );
 };
 

@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../actions/authActions";
-
+import { logOut } from "../services/firebase";
 import logo from "./logo.png";
 
 const Navbar = ({ auth, logout }) => {
@@ -34,6 +33,15 @@ const Navbar = ({ auth, logout }) => {
           <Link to="/register" className="nav-link">
             Register
           </Link>
+        </li>
+        <li className="navbar-item">
+          <button className="logout-button" onClick={logOut}>
+            <img
+              src="https://img.icons8.com/ios-filled/50/000000/google-logo.png"
+              alt="google icon"
+            />
+            <span>logout</span>
+          </button> 
         </li>
       </ul>
     </Fragment>
@@ -84,4 +92,4 @@ const Navbar = ({ auth, logout }) => {
 
 const mapStateToProps = (state) => ({ auth: state.auth });
 
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logOut })(Navbar);

@@ -1,7 +1,8 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useContext } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from '../providers/UserProvider';
 
 import CourseReviewForm from "./CourseReviewForm";
 import { SEMESTERS, SUBJECTS, UNIVERSITIES } from "../enums";
@@ -12,6 +13,8 @@ class CreateCourseReview extends Component {
 
     this.onSubmit = this.onSubmit.bind(this);
   }
+
+  
 
   onSubmit(coursereview) {
     coursereview.semester += ` ${coursereview.year}`;

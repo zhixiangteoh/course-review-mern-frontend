@@ -1,82 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { login, logout } from "../../actions/authActions";
-import { clearErrors } from "../../actions/errorActions";
+import React, { useEffect, useContext, useState } from 'react';
+import { signInWithGoogle } from '../../services/firebase';
+import { UserContext } from '../../providers/UserProvider';
+import { Redirect } from 'react-router-dom';
 
-const Login = ({
-  isAuthenticated,
-  error,
-  login,
-  clearErrors,
-  history,
-  location,
-}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState(null);
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    const user = { email, password };
-    login(user);
-  };
+export default function Login() {
+  const user = useContext(UserContext)
+  const [redirect, setredirect] = useState(null)
 
   useEffect(() => {
-    // Check for register error
-    if (error.id === "LOGIN_FAIL") {
-      setMsg(error.msg.msg);
-    } else {
-      setMsg(null);
+    if (user) {
+      setredirect('/')
     }
-
-    // If authenticated
-    if (isAuthenticated) {
-      history.push("/");
-    }
-  }, [error, isAuthenticated, history]);
-
+  }, [user])
+  if (redirect) {
+    <Redirect to={redirect}/>
+  }
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        {msg ? <p className="text-danger">{msg}</p> : null}
-        <div className="form-group">
-          <label>Email: </label>
-          <input
-            type="text"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Password: </label>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="d-flex">
-          <div className="form-group">
-            <input type="submit" value="Login" className="btn btn-primary" />
-          </div>
-          <div className="form-group">
-            <Link to="/register" className="nav-link">
-              New? Register here!
-            </Link>
-          </div>
-        </div>
-      </form>
-    </div>
+      <div className="login-buttons">
+        <button className="login-provider-button" onClick={signInWithGoogle}>
+        <img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"/>
+        <span> Continue with Google</span>
+       </button>
+      </div>
   );
-};
-
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error,
-});
-
-export default connect(mapStateToProps, { login, logout, clearErrors })(Login);
+}
